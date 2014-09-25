@@ -18,7 +18,7 @@
   var AWS = require('aws-sdk');
   var async = require('async');
 
-  // For Local DynamoDB endpoint will be "http://localhost:8000"
+  // For Local DynamoDB define endpoint will be "http://localhost:8000"
   var databaseConfig = {"endpoint": new AWS.Endpoint("http://localhost:8000")};
 
   // provide your configurations
@@ -43,9 +43,9 @@
   /*
    * Deleting Table
    * When running first time remove this task as Table will not be present
-   * And it might e throw an Error.
+   * And it might be throw an Error.
    * */
-  tasks.push(function (callback) {
+  /*tasks.push(function (callback) {
     dynamoDB.deleteTable({TableName: tableName}, function (error) {
       if (error) {
         console.log("Error: ", error, error.stack);
@@ -55,7 +55,7 @@
         callback(null);
       }
     });
-  });
+  });*/
   // Creating Table
   tasks.push(function (callback) {
     // Describe table here.
