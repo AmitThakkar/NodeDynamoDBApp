@@ -58,15 +58,29 @@
   });*/
   // Creating Table
   tasks.push(function (callback) {
-    // Describe table here.
+    /*
+     * Describe table here
+     * In DynamoDB we can define one primary key and one secondary key, As we know,
+     * DynamoDB is key-value pair base database, so we must have to define primary key.
+     * */
     var table = {
-      AttributeDefinitions: [ // Defining Primary Key
+      /*
+       * Defining Primary Key name and type here
+       * Here primary key name is order_id, and type is N(Number)
+       * for other types checkout on (http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DataModel.html)
+       * */
+      AttributeDefinitions: [
         {
           AttributeName: 'order_id',
           AttributeType: 'N'
         }
         // Define Secondary key here.
       ],
+      /*
+       * Number of attributes must same in key schema, the difference is only here,
+       * we define name with key-type. Name is same as AttributeDefinitions order_id,
+       * and KeyType is HASH
+       * */
       KeySchema: [ // Defining Key Type Here.
         {
           AttributeName: 'order_id',
