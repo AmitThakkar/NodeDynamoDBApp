@@ -1,8 +1,8 @@
 #Node Dynamo DB App
 
-This repository for containing the Demo Application for NodeJS which connect with DynamoDB.
+This repository contains Demo Application for NodeJS which connects with DynamoDB.
 
-As we know, **Dynamo** is fast, scalable, high available **AWS NoSQL Database Service**. Although we have many other databases which are also fast, scalable and good enough. But for scaling/sharding the database, we must have good knowledge of that database, or we must have expert DBA for managing the our database. 
+As we know, **Dynamo** is fast, scalable, highly available **AWS NoSQL Database Service**. Although we have many other databases which are also fast, scalable and good enough, but for scaling/sharding the database, we must have good knowledge of that database, or we must have expert DBA for managing the our database.
 
 That is not the case with **DynamoDB**. When we are working with **DynamoDB**, we don't have to care about the creating the replica, sharding the database or select the shard-key etc. All headache related to scalling/sharding purpose is already handled in **AWS Dynamo Database Service**. We have to just consume **AWS Dynamo Database Service** and concentrate on our project development, instead of spending lots of time on all this DBA related stuff.
 
@@ -26,8 +26,7 @@ Result:  { '0': undefined,
 ```bash
 exception when clearing com.almworks.sqlite4java.SQLiteException: [8] DB[1] reset [attempt to write a readonly database]
 ```
-then **DynamoDB** have not permission to write things to that particular directory/folder. So I will suggest run **DynamoDB** in home directory or run **DynamoDB** with **sudo** permission.
-And if you are running application second time then uncomment below code, so program can delete table first before creating again, otherwise it will throw an error for creating same table again.
+then **DynamoDB** is not having permission to write things to that particular directory/folder. So I will suggest run **DynamoDB** in home directory or run **DynamoDB** with sudo permission. And if you are running application second time then un-comment below code, so program can delete table first before creating again, otherwise it will throw an error for creating same table again.
 ```javascript
 tasks.push(function (callback) {
   dynamoDB.deleteTable({TableName: tableName}, function (error) {
@@ -88,9 +87,9 @@ Lets understand what is happening into **DynamoDBTest.js** file? Open **DynamoDB
   });
   /*
    * Deleting Table
-   * When running first time remove this task as Table will not be present
-   * And it might be throw an Error.
-   * */
+      * When running first time remove this task as Table will not be present
+      * And it might be throwing an Error.
+      * */
   /*tasks.push(function (callback) {
     dynamoDB.deleteTable({TableName: tableName}, function (error) {
       if (error) {
