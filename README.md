@@ -87,9 +87,9 @@ Lets understand what is happening into **DynamoDBTest.js** file? Open **DynamoDB
   });
   /*
    * Deleting Table
-      * When running first time remove this task as Table will not be present
-      * And it might be throwing an Error.
-      * */
+   * When running first time remove this task as Table will not be present
+   * And it might be throwing an Error.
+   * */
   /*tasks.push(function (callback) {
     dynamoDB.deleteTable({TableName: tableName}, function (error) {
       if (error) {
@@ -164,7 +164,5 @@ Lets understand what is happening into **DynamoDBTest.js** file? Open **DynamoDB
   });
 })();
 ```
-
-
 
 **Note**: You can checkout full working source code from this [link](https://github.com/AmitThakkar/NodeDynamoDBApp).

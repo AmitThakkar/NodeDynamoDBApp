@@ -43,7 +43,7 @@
   /*
    * Deleting Table
    * When running first time remove this task as Table will not be present
-   * And it might be throw an Error.
+   * And it might be throwing an Error.
    * */
   /*tasks.push(function (callback) {
     dynamoDB.deleteTable({TableName: tableName}, function (error) {
