@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Nodedynamodbapp by AmitThakkar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Nodedynamodbapp</h1>
+      <h2 class="project-tagline">this repository for containing the Demo Application for NodeJS which connect with DynamoDB.</h2>
+      <a href="https://github.com/AmitThakkar/NodeDynamoDBApp" class="btn">View on GitHub</a>
+      <a href="https://github.com/AmitThakkar/NodeDynamoDBApp/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/AmitThakkar/NodeDynamoDBApp/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="node-dynamo-db-app" class="anchor" href="#node-dynamo-db-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Node Dynamo DB App</h1>
+
+<p>This repository contains Demo Application for NodeJS which connects with DynamoDB.</p>
+
+<p>As we know, <strong>Dynamo</strong> is fast, scalable, highly available <strong>AWS NoSQL Database Service</strong>. Although we have many other databases which are also fast, scalable and good enough, but for scaling/sharding the database, we must have good knowledge of that database, or we must have expert DBA for managing the our database.</p>
+
+<p>That is not the case with <strong>DynamoDB</strong>. When we are working with <strong>DynamoDB</strong>, we don't have to care about the creating the replica, sharding the database or select the shard-key etc. All headache related to scalling/sharding purpose is already handled in <strong>AWS Dynamo Database Service</strong>. We have to just consume <strong>AWS Dynamo Database Service</strong> and concentrate on our project development, instead of spending lots of time on all this DBA related stuff.</p>
+
+<p>You can checkout more about <strong>Dynamo DB</strong> form this <a href="http://aws.amazon.com/dynamodb/">link</a>.</p>
+
+<p>That's enough for theory part, now lets move to practical. Lets make a basic demo application with <strong>NodeJS</strong>, which will communicate with <strong>AWS DynamoDB Database Service</strong>.</p>
+
+<p>For this demo application, we are connecting with local <strong>DynamoDB</strong>. To install <strong>DynamoDB</strong> locally follow this <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html">link</a>.</p>
+
+<p><strong>Tip</strong>: First checkout full working source code from this <a href="https://github.com/AmitThakkar/NodeDynamoDBApp">link</a>, and try to run. When you will run you will see output like this:</p>
+
+<div class="highlight highlight-source-shell"><pre>List Of Tables [ <span class="pl-s"><span class="pl-pds">'</span>OrderLog<span class="pl-pds">'</span></span> ]
+Table  OrderLog  Dropped<span class="pl-k">!</span>
+Table  OrderLog  Created<span class="pl-k">!</span>
+Row  {<span class="pl-s"><span class="pl-pds">"</span>Item<span class="pl-pds">"</span></span>:{<span class="pl-s"><span class="pl-pds">"</span>order_id<span class="pl-pds">"</span></span>:{<span class="pl-s"><span class="pl-pds">"</span>N<span class="pl-pds">"</span></span>:<span class="pl-s"><span class="pl-pds">"</span>1234<span class="pl-pds">"</span></span>},<span class="pl-s"><span class="pl-pds">"</span>order_body<span class="pl-pds">"</span></span>:{<span class="pl-s"><span class="pl-pds">"</span>S<span class="pl-pds">"</span></span>:<span class="pl-s"><span class="pl-pds">"</span>{a:34, b:34}<span class="pl-pds">"</span></span>}},<span class="pl-s"><span class="pl-pds">"</span>TableName<span class="pl-pds">"</span></span>:<span class="pl-s"><span class="pl-pds">"</span>OrderLog<span class="pl-pds">"</span></span>}  Inserted<span class="pl-k">!</span>
+Result:  { <span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span>: undefined,
+  <span class="pl-s"><span class="pl-pds">'</span>1<span class="pl-pds">'</span></span>: [ undefined, undefined, undefined, undefined ] }</pre></div>
+
+<p><strong>Note</strong>: If your are facing error while running the <strong>DynamoDBTest.js</strong> file which looks like:</p>
+
+<div class="highlight highlight-source-shell"><pre>exception when clearing com.almworks.sqlite4java.SQLiteException: [8] DB[1] reset [attempt to write a <span class="pl-k">readonly</span> database]</pre></div>
+
+<p>then <strong>DynamoDB</strong> is not having permission to write things to that particular directory/folder. So I will suggest run <strong>DynamoDB</strong> in home directory or run <strong>DynamoDB</strong> with sudo permission. And if you are running application second time then un-comment below code, so program can delete table first before creating again, otherwise it will throw an error for creating same table again.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">tasks</span>.<span class="pl-c1">push</span>(<span class="pl-k">function</span> (<span class="pl-smi">callback</span>) {
+  <span class="pl-smi">dynamoDB</span>.<span class="pl-en">deleteTable</span>({TableName<span class="pl-k">:</span> tableName}, <span class="pl-k">function</span> (<span class="pl-smi">error</span>) {
+    <span class="pl-k">if</span> (error) {
+      <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Error: <span class="pl-pds">"</span></span>, error, <span class="pl-smi">error</span>.<span class="pl-smi">stack</span>);
+      <span class="pl-en">callback</span>(error);
+    } <span class="pl-k">else</span> {
+      <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Table <span class="pl-pds">"</span></span>, tableName, <span class="pl-s"><span class="pl-pds">"</span> Dropped!<span class="pl-pds">"</span></span>);
+      <span class="pl-en">callback</span>(<span class="pl-c1">null</span>);
+    }
+  });
+});</pre></div>
+
+<p>Lets understand what is happening into <strong>DynamoDBTest.js</strong> file? Open <strong>DynamoDBTest.js</strong> file into your favorite Editor, and you will find everything into comments which is require to enough to explain the code.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * Created by Amit Thakkar on 17/9/14.</span>
+<span class="pl-c"> */</span>
+(<span class="pl-k">function</span> () {
+  <span class="pl-c">/*</span>
+<span class="pl-c">   * Define Configuration Here.</span>
+<span class="pl-c">   * To Connect with Local DynamoDB, We are providing dummy entries</span>
+<span class="pl-c">   * for required fields(accessKey, Secret and Region).</span>
+<span class="pl-c">   * To Connect with AWS DynamoDB Service place actual accessKey, Secret and Region.</span>
+<span class="pl-c">   * */</span>
+  <span class="pl-k">var</span> dynamoDBConfiguration <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>accessKeyId<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>DummyKeyForLocalDynamoDB<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>secretAccessKey<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>DummySecretAccessKeyForLocalDynamoDB<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>region<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>eu-west-1<span class="pl-pds">"</span></span>
+  };
+
+  <span class="pl-c">// requiring aws-sdk, async</span>
+  <span class="pl-k">var</span> <span class="pl-c1">AWS</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>aws-sdk<span class="pl-pds">'</span></span>);
+  <span class="pl-k">var</span> <span class="pl-k">async</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>async<span class="pl-pds">'</span></span>);
+
+  <span class="pl-c">// For Local DynamoDB define endpoint will be "http://localhost:8000"</span>
+  <span class="pl-k">var</span> databaseConfig <span class="pl-k">=</span> {<span class="pl-s"><span class="pl-pds">"</span>endpoint<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-k">new</span> <span class="pl-en">AWS.Endpoint</span>(<span class="pl-s"><span class="pl-pds">"</span>http://localhost:8000<span class="pl-pds">"</span></span>)};
+
+  <span class="pl-c">// provide your configurations</span>
+  <span class="pl-c1">AWS</span>.<span class="pl-smi">config</span>.<span class="pl-en">update</span>(dynamoDBConfiguration);
+  <span class="pl-c">// initialize DynamoDB Object.</span>
+  <span class="pl-k">var</span> dynamoDB <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">AWS.DynamoDB</span>(databaseConfig);
+
+  <span class="pl-k">var</span> tasks <span class="pl-k">=</span> [];
+  <span class="pl-k">var</span> tableName <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>OrderLog<span class="pl-pds">"</span></span>;
+  <span class="pl-c">// Listing tables</span>
+  <span class="pl-smi">tasks</span>.<span class="pl-c1">push</span>(<span class="pl-k">function</span> (<span class="pl-smi">callback</span>) {
+    <span class="pl-smi">dynamoDB</span>.<span class="pl-en">listTables</span>(<span class="pl-k">function</span> (<span class="pl-smi">error</span>, <span class="pl-smi">data</span>) {
+      <span class="pl-k">if</span> (error) {
+        <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Error: <span class="pl-pds">"</span></span>, error, <span class="pl-smi">error</span>.<span class="pl-smi">stack</span>);
+        <span class="pl-en">callback</span>(error);
+      } <span class="pl-k">else</span> {
+        <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>List Of Tables<span class="pl-pds">"</span></span>, <span class="pl-smi">data</span>.<span class="pl-smi">TableNames</span>);
+        <span class="pl-en">callback</span>(<span class="pl-c1">null</span>);
+      }
+    });
+  });
+  <span class="pl-c">/*</span>
+<span class="pl-c">   * Deleting Table</span>
+<span class="pl-c">   * When running first time remove this task as Table will not be present</span>
+<span class="pl-c">   * And it might be throwing an Error.</span>
+<span class="pl-c">   * */</span>
+  <span class="pl-c">/*tasks.push(function (callback) {</span>
+<span class="pl-c">    dynamoDB.deleteTable({TableName: tableName}, function (error) {</span>
+<span class="pl-c">      if (error) {</span>
+<span class="pl-c">        console.log("Error: ", error, error.stack);</span>
+<span class="pl-c">        callback(error);</span>
+<span class="pl-c">      } else {</span>
+<span class="pl-c">        console.log("Table ", tableName, " Dropped!");</span>
+<span class="pl-c">        callback(null);</span>
+<span class="pl-c">      }</span>
+<span class="pl-c">    });</span>
+<span class="pl-c">  });*/</span>
+  <span class="pl-c">// Creating Table</span>
+  <span class="pl-smi">tasks</span>.<span class="pl-c1">push</span>(<span class="pl-k">function</span> (<span class="pl-smi">callback</span>) {
+    <span class="pl-c">// Describe table here.</span>
+    <span class="pl-k">var</span> table <span class="pl-k">=</span> {
+      AttributeDefinitions<span class="pl-k">:</span> [ <span class="pl-c">// Defining Primary Key</span>
+        {
+          AttributeName<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>order_id<span class="pl-pds">'</span></span>,
+          AttributeType<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>N<span class="pl-pds">'</span></span>
+        }
+        <span class="pl-c">// Define Secondary key here.</span>
+      ],
+      KeySchema<span class="pl-k">:</span> [ <span class="pl-c">// Defining Key Type Here.</span>
+        {
+          AttributeName<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>order_id<span class="pl-pds">'</span></span>,
+          KeyType<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>HASH<span class="pl-pds">'</span></span>
+        }
+        <span class="pl-c">// Define Secondary Key Type Here.</span>
+      ],
+      <span class="pl-c">// Define read per second and write per second here.</span>
+      ProvisionedThroughput<span class="pl-k">:</span> {
+        ReadCapacityUnits<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+        WriteCapacityUnits<span class="pl-k">:</span> <span class="pl-c1">5</span>
+      },
+      TableName<span class="pl-k">:</span> tableName <span class="pl-c">// table Name</span>
+    };
+    <span class="pl-smi">dynamoDB</span>.<span class="pl-en">createTable</span>(table, <span class="pl-k">function</span> (<span class="pl-smi">error</span>, <span class="pl-smi">data</span>) {
+      <span class="pl-k">if</span> (error) {
+        <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Error: <span class="pl-pds">"</span></span>, error, <span class="pl-smi">error</span>.<span class="pl-smi">stack</span>);
+        <span class="pl-en">callback</span>(error);
+      } <span class="pl-k">else</span> {
+        <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Table <span class="pl-pds">"</span></span>, tableName, <span class="pl-s"><span class="pl-pds">"</span> Created!<span class="pl-pds">"</span></span>);
+        <span class="pl-en">callback</span>(<span class="pl-c1">null</span>);
+      }
+    });
+  });
+  <span class="pl-c">// Insert/Update a row</span>
+  <span class="pl-smi">tasks</span>.<span class="pl-c1">push</span>(<span class="pl-k">function</span> (<span class="pl-smi">callback</span>) {
+    <span class="pl-k">var</span> params <span class="pl-k">=</span> {
+      Item<span class="pl-k">:</span> {
+        order_id<span class="pl-k">:</span> {
+          N<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>1234<span class="pl-pds">'</span></span>
+        },
+        order_body<span class="pl-k">:</span> {
+          S<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>{a:34, b:34}<span class="pl-pds">"</span></span>
+        }
+      },
+      TableName<span class="pl-k">:</span> tableName
+    };
+    <span class="pl-smi">dynamoDB</span>.<span class="pl-en">putItem</span>(params, <span class="pl-k">function</span> (<span class="pl-smi">error</span>, <span class="pl-smi">data</span>) {
+      <span class="pl-k">if</span> (error) {
+        <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Error: <span class="pl-pds">"</span></span>, error, <span class="pl-smi">error</span>.<span class="pl-smi">stack</span>);
+        <span class="pl-en">callback</span>(error);
+      } <span class="pl-k">else</span> {
+        <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Row <span class="pl-pds">"</span></span>, <span class="pl-c1">JSON</span>.<span class="pl-en">stringify</span>(params), <span class="pl-s"><span class="pl-pds">"</span> Inserted!<span class="pl-pds">"</span></span>);
+        <span class="pl-en">callback</span>(<span class="pl-c1">null</span>);
+      }
+    });
+  });
+  <span class="pl-k">async</span>.<span class="pl-en">series</span>(tasks, <span class="pl-k">function</span> (<span class="pl-smi">error</span>, <span class="pl-smi">result</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>Result: <span class="pl-pds">"</span></span>, arguments);
+  });
+})();</pre></div>
+
+<p><strong>Note</strong>: You can checkout full working source code from this <a href="https://github.com/AmitThakkar/NodeDynamoDBApp">link</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/AmitThakkar/NodeDynamoDBApp">Nodedynamodbapp</a> is maintained by <a href="https://github.com/AmitThakkar">AmitThakkar</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
