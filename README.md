@@ -165,4 +165,12 @@ Lets understand what is happening into **DynamoDBTest.js** file? Open **DynamoDB
 })();
 ```
 
-**Note**: You can checkout full working source code from this [link](https://github.com/AmitThakkar/NodeDynamoDBApp).
+Follow Me
+---
+[Github](https://github.com/AmitThakkar)
+
+[Twitter](https://twitter.com/amit_thakkar01)
+
+[LinkedIn](https://in.linkedin.com/in/amitthakkar01)
+
+[More Blogs By Me](http://amitthakkar.github.io/)
